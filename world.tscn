@@ -1,0 +1,159 @@
+[gd_scene load_steps=22 format=3 uid="uid://b6pswnq6ihprl"]
+
+[ext_resource type="PackedScene" uid="uid://dgsfn0gh8on27" path="res://fish.tscn" id="1_f3sb7"]
+[ext_resource type="Shader" uid="uid://dxiouycpouwon" path="res://depth_shader.gdshader" id="1_fj7yv"]
+[ext_resource type="Texture2D" uid="uid://dslki7di4c3oe" path="res://assets/reef_background.jpg" id="3_tlwt5"]
+[ext_resource type="Texture2D" uid="uid://f7d5lojxtnxv" path="res://assets/reef_2.jpg" id="4_aqk2v"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tlwt5"]
+render_priority = 0
+shader = ExtResource("1_fj7yv")
+shader_parameter/shimmer_strength = 0.0010000000475
+shader_parameter/shimmer_speed = 0.7
+
+[sub_resource type="QuadMesh" id="QuadMesh_aqk2v"]
+material = SubResource("ShaderMaterial_tlwt5")
+size = Vector2(2, 2)
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_f3sb7"]
+
+[sub_resource type="Sky" id="Sky_f3sb7"]
+sky_material = SubResource("PhysicalSkyMaterial_f3sb7")
+
+[sub_resource type="Environment" id="Environment_f3sb7"]
+background_color = Color(0.2646182, 0.00086943386, 0.5471983, 1)
+sky = SubResource("Sky_f3sb7")
+ambient_light_source = 2
+ambient_light_color = Color(0.5982849, 0.41116068, 0.99998695, 1)
+ambient_light_energy = 0.5
+glow_enabled = true
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.035402533, 0.14268368, 0.21695372, 1)
+fog_density = 0.442
+fog_depth_curve = 0.3298779
+fog_depth_begin = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.5
+volumetric_fog_albedo = Color(7.315874e-06, 0.1865114, 0.5510554, 1)
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_anisotropy = 0.03
+volumetric_fog_detail_spread = 1.60766
+volumetric_fog_ambient_inject = 0.6
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_fj7yv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqk2v"]
+albedo_texture = ExtResource("3_tlwt5")
+
+[sub_resource type="QuadMesh" id="QuadMesh_036b0"]
+material = SubResource("StandardMaterial3D_aqk2v")
+size = Vector2(20, 10)
+
+[sub_resource type="Gradient" id="Gradient_aqk2v"]
+offsets = PackedFloat32Array(0, 0.3442623, 0.57377046, 0.9672131)
+colors = PackedColorArray(0.5255273, 0.44592774, 0.24592105, 1, 0.16554928, 0.17885765, 0.18759143, 1, 0.19769943, 0.01587333, 0.34565184, 1, 0.19672132, 0.19672132, 0.19672132, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_036b0"]
+noise_type = 2
+seed = 3
+frequency = 0.1
+fractal_octaves = 4
+cellular_return_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dwbse"]
+noise = SubResource("FastNoiseLite_036b0")
+color_ramp = SubResource("Gradient_aqk2v")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pkg7o"]
+noise_type = 2
+seed = 3
+frequency = 0.1
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gbfbk"]
+noise = SubResource("FastNoiseLite_pkg7o")
+seamless = true
+as_normal_map = true
+bump_strength = 4.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ioo17"]
+albedo_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
+albedo_texture = SubResource("NoiseTexture2D_dwbse")
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_gbfbk")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tlwt5"]
+material = SubResource("StandardMaterial3D_ioo17")
+size = Vector2(20, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_texture = ExtResource("4_aqk2v")
+
+[sub_resource type="QuadMesh" id="QuadMesh_dwbse"]
+material = SubResource("StandardMaterial3D_036b0")
+size = Vector2(10, 10)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.533283, 0.14919138, -0.8326772, 0.03329347, 0.97986126, 0.19688502, 0.8452816, -0.13271815, 0.5175762, 4.415954, 0.75337625, 1.6336088)
+fov = 81.6
+
+[node name="depth_shader" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.142787e-05, -0.04389918)
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_aqk2v")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.36952984, 0.76268727, -0.53080684, -0.0045698904, 0.5727246, 0.81973517, 0.9292077, -0.30049086, 0.21512422, 3.6103659, 4.602554, 1.3877945)
+light_color = Color(0.6734852, 0.39619747, 1, 1)
+light_energy = 3.883
+light_indirect_energy = 6.903
+light_volumetric_fog_energy = 0.3
+light_size = 0.058
+spot_range = 10.344
+spot_angle = 19.99
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_f3sb7")
+camera_attributes = SubResource("CameraAttributesPractical_fj7yv")
+
+[node name="fish" parent="." instance=ExtResource("1_f3sb7")]
+transform = Transform3D(-0.11103982, 0, 0.58963567, 0, 0.6, 0, -0.58963567, 0, -0.11103982, 8.66864, -0.42895198, 0.5389322)
+
+[node name="Skeleton3D" parent="fish/Armature" index="0"]
+bones/0/rotation = Quaternion(-0.008920699, -0.010658408, -0.6352934, 0.77214575)
+bones/1/rotation = Quaternion(-0.00011647009, 7.889293e-06, -0.06667233, 0.99777496)
+bones/2/rotation = Quaternion(-0.00011682569, 4.1643528e-07, -0.0040502935, 0.99999183)
+bones/3/rotation = Quaternion(-0.000116698655, -5.4727807e-06, 0.046233065, 0.9989307)
+bones/4/rotation = Quaternion(-0.00011681172, -1.7709341e-06, 0.014625666, 0.99989307)
+bones/5/rotation = Quaternion(-0.00011681364, -1.512609e-06, 0.013067113, 0.99991465)
+
+[node name="AnimationPlayer" parent="fish" index="1"]
+autoplay = "ArmatureAction"
+
+[node name="background" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7439218, -1.0787234)
+mesh = SubResource("QuadMesh_036b0")
+
+[node name="floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22404814, -0.646086, 0.79939616)
+mesh = SubResource("PlaneMesh_tlwt5")
+
+[node name="side" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.019773344, 0, -0.9998045, 0, 1, 0, 0.9998045, 0, 0.019773344, 9.899329, 1.6915019, 1.3982563)
+mesh = SubResource("QuadMesh_dwbse")
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(0.7835898, 0.61716926, 0.07133719, -0.47664228, 0.52354175, 0.7061984, 0.39849603, -0.5873722, 0.704411, 8.787352, 3.7150521, 4.0313416)
+light_color = Color(1, 0.21988544, 0.33930194, 1)
+light_energy = 4.426
+light_volumetric_fog_energy = 0.6
+spot_range = 15.486
+spot_angle = 39.54
+spot_angle_attenuation = 1.2745616
+
+[editable path="fish"]
