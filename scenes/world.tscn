@@ -1,13 +1,13 @@
 [gd_scene load_steps=22 format=3 uid="uid://b6pswnq6ihprl"]
 
-[ext_resource type="PackedScene" uid="uid://dgsfn0gh8on27" path="res://fish.tscn" id="1_f3sb7"]
-[ext_resource type="Shader" uid="uid://dxiouycpouwon" path="res://depth_shader.gdshader" id="1_fj7yv"]
-[ext_resource type="Texture2D" uid="uid://dslki7di4c3oe" path="res://assets/reef_background.jpg" id="3_tlwt5"]
-[ext_resource type="Texture2D" uid="uid://f7d5lojxtnxv" path="res://assets/reef_2.jpg" id="4_aqk2v"]
+[ext_resource type="Shader" uid="uid://dxiouycpouwon" path="res://shaders/depth_shader.gdshader" id="1_k0juu"]
+[ext_resource type="PackedScene" uid="uid://dgsfn0gh8on27" path="res://scenes/fish.tscn" id="2_71j4m"]
+[ext_resource type="Texture2D" uid="uid://dslki7di4c3oe" path="res://assets/reef_background.jpg" id="3_qfnet"]
+[ext_resource type="Texture2D" uid="uid://f7d5lojxtnxv" path="res://assets/reef_2.jpg" id="4_i7141"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tlwt5"]
 render_priority = 0
-shader = ExtResource("1_fj7yv")
+shader = ExtResource("1_k0juu")
 shader_parameter/shimmer_strength = 0.0010000000475
 shader_parameter/shimmer_speed = 0.7
 
@@ -44,7 +44,7 @@ volumetric_fog_ambient_inject = 0.6
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_fj7yv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqk2v"]
-albedo_texture = ExtResource("3_tlwt5")
+albedo_texture = ExtResource("3_qfnet")
 
 [sub_resource type="QuadMesh" id="QuadMesh_036b0"]
 material = SubResource("StandardMaterial3D_aqk2v")
@@ -89,7 +89,7 @@ material = SubResource("StandardMaterial3D_ioo17")
 size = Vector2(20, 20)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
-albedo_texture = ExtResource("4_aqk2v")
+albedo_texture = ExtResource("4_i7141")
 
 [sub_resource type="QuadMesh" id="QuadMesh_dwbse"]
 material = SubResource("StandardMaterial3D_036b0")
@@ -121,7 +121,7 @@ spot_angle = 19.99
 environment = SubResource("Environment_f3sb7")
 camera_attributes = SubResource("CameraAttributesPractical_fj7yv")
 
-[node name="fish" parent="." instance=ExtResource("1_f3sb7")]
+[node name="fish" parent="." instance=ExtResource("2_71j4m")]
 transform = Transform3D(-0.11103982, 0, 0.58963567, 0, 0.6, 0, -0.58963567, 0, -0.11103982, 8.66864, -0.42895198, 0.5389322)
 
 [node name="Skeleton3D" parent="fish/Armature" index="0"]
