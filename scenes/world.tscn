@@ -1,15 +1,16 @@
-[gd_scene load_steps=22 format=3 uid="uid://b6pswnq6ihprl"]
+[gd_scene load_steps=26 format=3 uid="uid://b6pswnq6ihprl"]
 
 [ext_resource type="Shader" uid="uid://dxiouycpouwon" path="res://shaders/depth_shader.gdshader" id="1_k0juu"]
 [ext_resource type="PackedScene" uid="uid://dgsfn0gh8on27" path="res://scenes/fish.tscn" id="2_71j4m"]
 [ext_resource type="Texture2D" uid="uid://dslki7di4c3oe" path="res://assets/reef_background.jpg" id="3_qfnet"]
+[ext_resource type="Shader" uid="uid://clu8gnvdi1b7a" path="res://shaders/floor.gdshader" id="4_71j4m"]
 [ext_resource type="Texture2D" uid="uid://f7d5lojxtnxv" path="res://assets/reef_2.jpg" id="4_i7141"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tlwt5"]
 render_priority = 0
 shader = ExtResource("1_k0juu")
-shader_parameter/shimmer_strength = 0.0010000000475
-shader_parameter/shimmer_speed = 0.7
+shader_parameter/shimmer_strength = 0.002000000095
+shader_parameter/shimmer_speed = 0.6
 
 [sub_resource type="QuadMesh" id="QuadMesh_aqk2v"]
 material = SubResource("ShaderMaterial_tlwt5")
@@ -25,7 +26,7 @@ background_color = Color(0.2646182, 0.00086943386, 0.5471983, 1)
 sky = SubResource("Sky_f3sb7")
 ambient_light_source = 2
 ambient_light_color = Color(0.5982849, 0.41116068, 0.99998695, 1)
-ambient_light_energy = 0.5
+ambient_light_energy = 0.3
 glow_enabled = true
 fog_enabled = true
 fog_mode = 1
@@ -34,8 +35,8 @@ fog_density = 0.442
 fog_depth_curve = 0.3298779
 fog_depth_begin = 0.0
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.5
-volumetric_fog_albedo = Color(7.315874e-06, 0.1865114, 0.5510554, 1)
+volumetric_fog_density = 0.45
+volumetric_fog_albedo = Color(0.16470589, 0.34117648, 0.9372549, 1)
 volumetric_fog_emission_energy = 0.0
 volumetric_fog_anisotropy = 0.03
 volumetric_fog_detail_spread = 1.60766
@@ -50,43 +51,60 @@ albedo_texture = ExtResource("3_qfnet")
 material = SubResource("StandardMaterial3D_aqk2v")
 size = Vector2(20, 10)
 
-[sub_resource type="Gradient" id="Gradient_aqk2v"]
-offsets = PackedFloat32Array(0, 0.3442623, 0.57377046, 0.9672131)
-colors = PackedColorArray(0.5255273, 0.44592774, 0.24592105, 1, 0.16554928, 0.17885765, 0.18759143, 1, 0.19769943, 0.01587333, 0.34565184, 1, 0.19672132, 0.19672132, 0.19672132, 1)
+[sub_resource type="Gradient" id="Gradient_71j4m"]
+offsets = PackedFloat32Array(0.10655738, 0.47540984, 0.8360656, 1)
+colors = PackedColorArray(0.5654682, 0.48388702, 0.2104922, 1, 0.6998991, 0.61333674, 0.31192815, 1, 0.562564, 0.43493629, 0.22515896, 1, 0.44357905, 0.38428935, 0.22210822, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_036b0"]
-noise_type = 2
-seed = 3
-frequency = 0.1
-fractal_octaves = 4
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qfnet"]
+gradient = SubResource("Gradient_71j4m")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_qfnet"]
+noise_type = 3
+frequency = 0.0101
 cellular_return_type = 0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dwbse"]
-noise = SubResource("FastNoiseLite_036b0")
-color_ramp = SubResource("Gradient_aqk2v")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_i7141"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_qfnet")
 seamless = true
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_pkg7o"]
-noise_type = 2
-seed = 3
-frequency = 0.1
-fractal_octaves = 4
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i7141"]
+noise_type = 3
+frequency = 0.0101
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gbfbk"]
-noise = SubResource("FastNoiseLite_pkg7o")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4mrxx"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_i7141")
 seamless = true
 as_normal_map = true
-bump_strength = 4.2
+bump_strength = 16.8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ioo17"]
-albedo_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
-albedo_texture = SubResource("NoiseTexture2D_dwbse")
-normal_enabled = true
-normal_texture = SubResource("NoiseTexture2D_gbfbk")
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_71j4m"]
+noise_type = 0
+seed = 2
+frequency = 0.004
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_qfnet"]
+noise = SubResource("FastNoiseLite_71j4m")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qfnet"]
+render_priority = 0
+shader = ExtResource("4_71j4m")
+shader_parameter/texture_map = SubResource("NoiseTexture2D_qfnet")
+shader_parameter/color_map = SubResource("NoiseTexture2D_i7141")
+shader_parameter/normal_map = SubResource("NoiseTexture2D_4mrxx")
+shader_parameter/normal_depth = 1.1550000548625
+shader_parameter/color_scale = 3.0
+shader_parameter/color_gradient = SubResource("GradientTexture1D_qfnet")
+shader_parameter/max_height = 0.4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tlwt5"]
-material = SubResource("StandardMaterial3D_ioo17")
-size = Vector2(20, 20)
+material = SubResource("ShaderMaterial_qfnet")
+size = Vector2(10, 10)
+subdivide_width = 300
+subdivide_depth = 300
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
 albedo_texture = ExtResource("4_i7141")
@@ -98,7 +116,7 @@ size = Vector2(10, 10)
 [node name="Node3D" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.533283, 0.14919138, -0.8326772, 0.03329347, 0.97986126, 0.19688502, 0.8452816, -0.13271815, 0.5175762, 4.415954, 0.75337625, 1.6336088)
+transform = Transform3D(0.53328294, 0.14919136, -0.8326772, 0.033293467, 0.97986114, 0.19688502, 0.8452815, -0.13271813, 0.5175762, 4.415954, 0.8315706, 1.6336088)
 fov = 81.6
 
 [node name="depth_shader" type="MeshInstance3D" parent="Camera3D"]
@@ -122,7 +140,7 @@ environment = SubResource("Environment_f3sb7")
 camera_attributes = SubResource("CameraAttributesPractical_fj7yv")
 
 [node name="fish" parent="." instance=ExtResource("2_71j4m")]
-transform = Transform3D(-0.11103982, 0, 0.58963567, 0, 0.6, 0, -0.58963567, 0, -0.11103982, 8.66864, -0.42895198, 0.5389322)
+transform = Transform3D(-0.11103982, 0, 0.58963567, 0, 0.6, 0, -0.58963567, 0, -0.11103982, 8.66864, 0.10067487, 0.5389322)
 
 [node name="Skeleton3D" parent="fish/Armature" index="0"]
 bones/0/rotation = Quaternion(-0.008920699, -0.010658408, -0.6352934, 0.77214575)
@@ -140,7 +158,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7439218, -1.0787234)
 mesh = SubResource("QuadMesh_036b0")
 
 [node name="floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22404814, -0.646086, 0.79939616)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2871594, -0.646086, 0.79939616)
 mesh = SubResource("PlaneMesh_tlwt5")
 
 [node name="side" type="MeshInstance3D" parent="."]
@@ -151,7 +169,7 @@ mesh = SubResource("QuadMesh_dwbse")
 transform = Transform3D(0.7835898, 0.61716926, 0.07133719, -0.47664228, 0.52354175, 0.7061984, 0.39849603, -0.5873722, 0.704411, 8.787352, 3.7150521, 4.0313416)
 light_color = Color(1, 0.21988544, 0.33930194, 1)
 light_energy = 4.426
-light_volumetric_fog_energy = 0.6
+light_volumetric_fog_energy = 0.9
 spot_range = 15.486
 spot_angle = 39.54
 spot_angle_attenuation = 1.2745616
